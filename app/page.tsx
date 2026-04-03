@@ -7,8 +7,8 @@ import { DashboardSection } from '@/components/dashboard-section'
 import { ScenarioSection } from '@/components/scenario-section'
 import { PaymentLogSection } from '@/components/payment-log-section'
 import { DecisionsSection } from '@/components/decisions-section'
-import { DecisionTimeline } from '@/components/decision-timeline'
-import { HTTP402PaymentFlow } from '@/components/http402-flow'
+import { AgentDecisionFlow } from '@/components/agent-decision-flow'
+import { PaidAPIFlow } from '@/components/paid-api-flow'
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState<string>('dashboard')
@@ -26,9 +26,9 @@ export default function Page() {
       case 'decisions':
         return (
           <div className="space-y-8">
-            <DecisionTimeline />
+            <AgentDecisionFlow />
             <div className="border-t border-border pt-8">
-              <HTTP402PaymentFlow />
+              <PaidAPIFlow />
             </div>
             <div className="border-t border-border pt-8">
               <DecisionsSection />
