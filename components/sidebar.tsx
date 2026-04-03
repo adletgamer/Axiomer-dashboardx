@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { LayoutDashboard, Settings, BarChart3, Clock, Brain } from 'lucide-react'
+import { LayoutDashboard, Settings, BarChart3, Clock, Brain, Zap } from 'lucide-react'
 
 interface SidebarProps {
   activeSection: string
@@ -33,6 +33,12 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
       label: 'Payment Log',
       icon: Clock,
       description: 'Payment history'
+    },
+    {
+      id: 'stellar',
+      label: 'Stellar Wallet',
+      icon: Zap,
+      description: 'Blockchain payments'
     }
   ]
 

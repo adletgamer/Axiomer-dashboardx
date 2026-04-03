@@ -9,6 +9,7 @@ import { PaymentLogSection } from '@/components/payment-log-section'
 import { DecisionsSection } from '@/components/decisions-section'
 import { AgentDecisionFlow } from '@/components/agent-decision-flow'
 import { PaidAPIFlow } from '@/components/paid-api-flow'
+import { StellarDemo } from '@/components/stellar-demo'
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState<string>('dashboard')
@@ -35,6 +36,8 @@ export default function Page() {
             </div>
           </div>
         )
+      case 'stellar':
+        return <StellarDemo />
       default:
         return <DashboardSection />
     }
