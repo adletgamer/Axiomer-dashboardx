@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
@@ -10,12 +10,6 @@ export const metadata: Metadata = {
   title: 'AI Cashflow Survival Agent',
   description: 'Real-time cash flow monitoring and AI-powered payment optimization for financial survival',
   generator: 'v0.app',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    userScalable: false,
-    viewportFit: 'cover'
-  },
   icons: {
     icon: [
       {
@@ -33,6 +27,13 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-icon.png',
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  userScalable: false,
+  viewportFit: 'cover'
 }
 
 export default function RootLayout({

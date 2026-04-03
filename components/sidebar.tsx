@@ -26,7 +26,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
       id: 'decisions',
       label: 'Agent Decisions',
       icon: Brain,
-      description: 'AI decision log'
+      description: 'Timeline, flow & decision log'
     },
     {
       id: 'payments',
