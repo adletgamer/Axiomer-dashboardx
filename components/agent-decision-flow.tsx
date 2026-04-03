@@ -237,16 +237,14 @@ export function AgentDecisionFlow() {
                       </div>
                     </div>
 
-                    {/* Expand button */}
-                    <button
-                      className="flex-shrink-0 ml-2 text-muted-foreground hover:text-foreground transition-colors"
-                    >
+                    {/* Expand chevron */}
+                    <div className="flex-shrink-0 ml-2 text-muted-foreground pointer-events-none">
                       {isExpanded ? (
                         <ChevronUp className="w-5 h-5" />
                       ) : (
                         <ChevronDown className="w-5 h-5" />
                       )}
-                    </button>
+                    </div>
                   </div>
                 </button>
 
