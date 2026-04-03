@@ -120,7 +120,12 @@ export function ScenarioSection() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-foreground">Scenario</h1>
+      <div>
+        <h1 className="text-3xl font-bold text-foreground">Scenario Setup</h1>
+        <p className="text-muted-foreground mt-2">
+          Configure your financial scenario for the agent to analyze
+        </p>
+      </div>
 
       {/* Input Section */}
       <Card className="p-6">

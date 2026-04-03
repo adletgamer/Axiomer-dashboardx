@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Sidebar } from '@/components/sidebar'
 import { TopBar } from '@/components/top-bar'
 import { DashboardSection } from '@/components/dashboard-section'
@@ -10,13 +10,37 @@ import { DecisionsSection } from '@/components/decisions-section'
 import { AgentDecisionFlow } from '@/components/agent-decision-flow'
 import { PaidAPIFlow } from '@/components/paid-api-flow'
 import { StellarDemo } from '@/components/stellar-demo'
+import { WalletSetup, type WalletConfig } from '@/components/wallet-setup'
+import { useWallet } from '@/lib/use-wallet'
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState<string>('dashboard')
   const [balance] = useState<number>(87250)
   const [agentStatus] = useState<'active' | 'evaluating' | 'executing'>('active')
+  const [isClient, setIsClient] = useState(false)
+  const wallet = useWallet()
+
+  // Only render on client to avoid hydration issues
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const renderSection = () => {
+    // Show wallet setup if not configured
+    if (activeSection === 'stellar' && !wallet.isLoading) {
+      if (!wallet.isConfigured()) {
+        return (
+          <WalletSetup
+            onWalletCreated={(config: WalletConfig) => {
+              wallet.saveConfig(config)
+              setActiveSection('dashboard')
+            }}
+          />
+        )
+      }
+      return <StellarDemo />
+    }
+
     switch (activeSection) {
       case 'dashboard':
         return <DashboardSection />
@@ -31,16 +55,16 @@ export default function Page() {
             <div className="border-t border-border pt-8">
               <PaidAPIFlow />
             </div>
-            <div className="border-t border-border pt-8">
-              <DecisionsSection />
-            </div>
           </div>
         )
-      case 'stellar':
-        return <StellarDemo />
       default:
         return <DashboardSection />
     }
+  }
+
+  // Prevent hydration mismatch
+  if (!isClient) {
+    return null
   }
 
   return (

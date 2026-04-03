@@ -148,7 +148,12 @@ export function DecisionsSection() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-foreground">Agent Decisions</h1>
+      <div>
+        <h1 className="text-3xl font-bold text-foreground">Agent Decisions</h1>
+        <p className="text-muted-foreground mt-2">
+          AI-generated decisions and recommendations for cash flow optimization
+        </p>
+      </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

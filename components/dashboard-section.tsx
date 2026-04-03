@@ -37,7 +37,12 @@ export function DashboardSection() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+      <div>
+        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-muted-foreground mt-2">
+          Real-time cash flow analysis and survival metrics
+        </p>
+      </div>
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
