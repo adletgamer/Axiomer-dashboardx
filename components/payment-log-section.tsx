@@ -6,97 +6,96 @@ import { Download, Filter } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-interface Payment {
+interface MicropaymentEntry {
   id: string
-  recipient: string
-  amount: number
-  date: string
-  status: 'completed' | 'pending' | 'failed' | 'scheduled'
-  reason: string
+  endpoint: string
+  cost: number
+  timestamp: string
+  status: 'success' | 'failed'
+  result: string
   txHash?: string
 }
 
 export function PaymentLogSection() {
-  const payments: Payment[] = [
+  const micropayments: MicropaymentEntry[] = [
     {
       id: '1',
-      recipient: 'AWS',
-      amount: 8500,
-      date: '2024-03-28 14:32:00',
-      status: 'completed',
-      reason: 'Infrastructure costs',
+      endpoint: '/predict-revenue',
+      cost: 0.02,
+      timestamp: '2024-03-28 14:32:15',
+      status: 'success',
+      result: 'Forecasted $85k inflow (72% confidence)',
       txHash: '0x8f3...a2c1'
     },
     {
       id: '2',
-      recipient: 'Stripe Processing',
-      amount: 12400,
-      date: '2024-03-28 11:15:00',
-      status: 'completed',
-      reason: 'Monthly processing fees',
+      endpoint: '/prioritize-payments',
+      cost: 0.01,
+      timestamp: '2024-03-28 14:32:08',
+      status: 'success',
+      result: 'Reordered 8 invoices, optimized schedule',
       txHash: '0x3d7...f9a2'
     },
     {
       id: '3',
-      recipient: 'DataDog',
-      amount: 2800,
-      date: '2024-03-27 09:20:00',
-      status: 'completed',
-      reason: 'Analytics & monitoring',
+      endpoint: '/market-conditions',
+      cost: 0.005,
+      timestamp: '2024-03-28 13:45:20',
+      status: 'success',
+      result: 'Liquidity stable, lending rates +2%',
       txHash: '0x5b2...c4e8'
     },
     {
       id: '4',
-      recipient: 'Payroll - March',
-      amount: 65000,
-      date: '2024-03-31 10:00:00',
-      status: 'scheduled',
-      reason: 'Employee salaries'
-    },
-    {
-      id: '5',
-      recipient: 'Office Rent',
-      amount: 12000,
-      date: '2024-04-01 00:00:00',
-      status: 'scheduled',
-      reason: 'Monthly office lease'
-    },
-    {
-      id: '6',
-      recipient: 'Vercel Pro',
-      amount: 240,
-      date: '2024-03-26 16:45:00',
-      status: 'completed',
-      reason: 'Hosting platform',
+      endpoint: '/risk-assessment',
+      cost: 0.015,
+      timestamp: '2024-03-28 13:44:55',
+      status: 'success',
+      result: 'Default risk 34%, downtrend confirmed',
       txHash: '0x9c1...b7d3'
     },
     {
+      id: '5',
+      endpoint: '/predict-revenue',
+      cost: 0.02,
+      timestamp: '2024-03-27 09:20:10',
+      status: 'success',
+      result: 'Forecasted $92k inflow (68% confidence)',
+      txHash: '0x4a6...e9f2'
+    },
+    {
+      id: '6',
+      endpoint: '/market-conditions',
+      cost: 0.005,
+      timestamp: '2024-03-27 08:15:30',
+      status: 'failed',
+      result: 'Service timeout, using cached data',
+      txHash: '0x6b2...d5f3'
+    },
+    {
       id: '7',
-      recipient: 'GitHub Enterprise',
-      amount: 500,
-      date: '2024-03-25 08:10:00',
-      status: 'pending',
-      reason: 'Repository management'
+      endpoint: '/prioritize-payments',
+      cost: 0.01,
+      timestamp: '2024-03-26 16:45:22',
+      status: 'success',
+      result: 'Updated priority matrix for 12 invoices',
+      txHash: '0x7c3...e6g4'
     },
     {
       id: '8',
-      recipient: 'Notion Pro',
-      amount: 150,
-      date: '2024-03-24 13:22:00',
-      status: 'failed',
-      reason: 'Documentation platform',
-      txHash: '0x4a6...e9f2'
+      endpoint: '/predict-revenue',
+      cost: 0.02,
+      timestamp: '2024-03-26 14:20:05',
+      status: 'success',
+      result: 'Forecasted $78k inflow (71% confidence)',
+      txHash: '0x8d4...f7h5'
     }
   ]
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed':
+      case 'success':
         return 'bg-green-500/20 text-green-700 dark:text-green-400'
-      case 'pending':
-        return 'bg-blue-500/20 text-blue-700 dark:text-blue-400'
-      case 'scheduled':
-        return 'bg-amber-500/20 text-amber-700 dark:text-amber-400'
       case 'failed':
         return 'bg-red-500/20 text-red-700 dark:text-red-400'
       default:
@@ -108,59 +107,52 @@ export function PaymentLogSection() {
     return status.charAt(0).toUpperCase() + status.slice(1)
   }
 
-  const totalCompleted = payments
-    .filter((p) => p.status === 'completed')
-    .reduce((sum, p) => sum + p.amount, 0)
+  const totalSpent = micropayments.reduce((sum, m) => sum + m.cost, 0)
+  const successCount = micropayments.filter((m) => m.status === 'success').length
+  const successRate = ((successCount / micropayments.length) * 100).toFixed(1)
 
-  const totalScheduled = payments
-    .filter((p) => p.status === 'scheduled')
-    .reduce((sum, p) => sum + p.amount, 0)
+  // Calculate ROI: cost savings vs. total spent
+  const estimatedSavings = 45000 // Mocked: prevented defaults, optimized schedules
+  const roi = ((estimatedSavings / totalSpent) * 100).toFixed(0)
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Payment Log</h1>
-        <p className="text-muted-foreground mt-2">
-          Complete history of all payments processed by the agent
-        </p>
-      </div>
+      <h1 className="text-3xl font-bold text-foreground">Micropayments</h1>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="p-4">
-          <p className="text-xs text-muted-foreground font-medium">
-            Completed Payments
+          <p className="text-xs text-muted-foreground font-medium">Total Spent</p>
+          <p className="text-2xl font-bold text-accent mt-2">
+            ${totalSpent.toFixed(2)} USDC
           </p>
+          <p className="text-xs text-muted-foreground mt-2">{micropayments.length} API calls</p>
+        </Card>
+
+        <Card className="p-4">
+          <p className="text-xs text-muted-foreground font-medium">Success Rate</p>
           <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-2">
-            ${totalCompleted.toLocaleString()}
+            {successRate}%
           </p>
           <p className="text-xs text-muted-foreground mt-2">
-            {payments.filter((p) => p.status === 'completed').length} transactions
+            {successCount} successful calls
           </p>
         </Card>
 
         <Card className="p-4">
-          <p className="text-xs text-muted-foreground font-medium">
-            Scheduled Payments
-          </p>
-          <p className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-2">
-            ${totalScheduled.toLocaleString()}
-          </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            {payments.filter((p) => p.status === 'scheduled').length} transactions
-          </p>
-        </Card>
-
-        <Card className="p-4">
-          <p className="text-xs text-muted-foreground font-medium">
-            Total Value
-          </p>
+          <p className="text-xs text-muted-foreground font-medium">Est. Savings</p>
           <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-2">
-            ${payments.reduce((sum, p) => sum + p.amount, 0).toLocaleString()}
+            ${estimatedSavings.toLocaleString()}
           </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            {payments.length} total transactions
+          <p className="text-xs text-muted-foreground mt-2">Default prevention + optimization</p>
+        </Card>
+
+        <Card className="p-4">
+          <p className="text-xs text-muted-foreground font-medium">ROI</p>
+          <p className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-2">
+            {roi}x
           </p>
+          <p className="text-xs text-muted-foreground mt-2">Return on invested USDC</p>
         </Card>
       </div>
 
@@ -178,51 +170,51 @@ export function PaymentLogSection() {
         </Button>
       </div>
 
-      {/* Payment Table */}
+      {/* Micropayment Table */}
       <Card>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="border-b border-border">
               <tr className="bg-muted/50">
                 <th className="text-left py-3 px-4 font-semibold text-muted-foreground">
-                  Recipient
+                  API Endpoint
                 </th>
                 <th className="text-right py-3 px-4 font-semibold text-muted-foreground">
-                  Amount
+                  Cost
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-muted-foreground">
-                  Date
+                  Timestamp
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-muted-foreground">
                   Status
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-muted-foreground">
-                  Reason
+                  Result
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-muted-foreground">
-                  Transaction
+                  TX Hash
                 </th>
               </tr>
             </thead>
             <tbody>
-              {payments.map((payment) => (
+              {micropayments.map((payment) => (
                 <tr
                   key={payment.id}
                   className="border-b border-border hover:bg-muted/30 transition-colors"
                 >
                   <td className="py-3 px-4">
-                    <p className="font-medium text-foreground">
-                      {payment.recipient}
+                    <p className="font-mono font-medium text-accent text-sm">
+                      {payment.endpoint}
                     </p>
                   </td>
                   <td className="text-right py-3 px-4">
                     <p className="font-semibold text-foreground">
-                      ${payment.amount.toLocaleString()}
+                      {payment.cost.toFixed(3)} USDC
                     </p>
                   </td>
                   <td className="py-3 px-4">
                     <p className="text-muted-foreground text-xs">
-                      {payment.date}
+                      {payment.timestamp}
                     </p>
                   </td>
                   <td className="py-3 px-4">
@@ -237,7 +229,7 @@ export function PaymentLogSection() {
                   </td>
                   <td className="py-3 px-4">
                     <p className="text-muted-foreground text-sm">
-                      {payment.reason}
+                      {payment.result}
                     </p>
                   </td>
                   <td className="py-3 px-4">
@@ -257,15 +249,6 @@ export function PaymentLogSection() {
             </tbody>
           </table>
         </div>
-      </Card>
-
-      {/* Info Card */}
-      <Card className="p-4 border border-accent/20 bg-accent/5">
-        <p className="text-sm text-muted-foreground">
-          <span className="font-semibold text-foreground">Pro Tip:</span> Use the
-          filter controls to search by recipient, amount, or status. All
-          completed payments include transaction hashes for verification.
-        </p>
       </Card>
     </div>
   )
