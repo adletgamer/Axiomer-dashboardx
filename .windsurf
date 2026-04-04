@@ -1,0 +1,38 @@
+project:
+  name: cashflow-survival-agent
+  description: >
+    AI agent that spends USDC on Stellar to buy financial intelligence via x402-like flows.
+
+stack:
+  frontend:
+    framework: next.js
+    status: implemented
+  backend:
+    framework: node.js
+    library: express
+    status: implemented
+    path: backend/
+  blockchain:
+    network: stellar testnet
+    asset: USDC
+    sdk: "@stellar/stellar-sdk"
+  payments:
+    protocol: x402-like (custom minimal implementation)
+
+goals:
+  - implement real API paywall using HTTP 402
+  - integrate Stellar testnet payments
+  - connect frontend agent to real backend
+  - demonstrate economic loop: spend -> insight -> decision improvement
+
+constraints:
+  - keep backend minimal (1-2 endpoints)
+  - avoid overengineering
+  - prioritize demo clarity over production security
+
+first_tasks:
+  - create express server
+  - implement /predict-revenue endpoint
+  - return 402 with payment instructions
+  - verify Stellar transaction
+  - return mock financial insight
