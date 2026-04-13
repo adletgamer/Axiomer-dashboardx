@@ -499,7 +499,13 @@ export function PaidAPIFlow() {
                 <Badge className="bg-violet-100 dark:bg-violet-900/40 text-violet-800 dark:text-violet-300 text-[10px] font-bold px-2 py-0.5">
                   SOROBAN AUTH
                 </Badge>
+                {flowResponse.demo && (
+                  <Badge className="bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5">
+                    DEMO MODE
+                  </Badge>
+                )}
               </div>
+
 
               {/* Payment settlement proof */}
               {flowResponse.paymentResponse && (

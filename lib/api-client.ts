@@ -80,7 +80,10 @@ export interface X402AutomatedResponse {
   totalMs?: number
   error?: string
   detail?: string
+  /** true when running simulated flow (no private key / no backend) */
+  demo?: boolean
 }
+
 
 // ══════════════════════════════════════════════════
 // AUTOMATED x402 flow (recommended — server-side signing)
@@ -102,18 +105,35 @@ export async function executeX402Flow(): Promise<X402AutomatedResponse> {
   try {
     const res = await fetch('/api/x402-predict', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       signal: controller.signal,
     })
 
-    const data: X402AutomatedResponse = await res.json()
-
-    // OWASP A8: Validate response structure
-    if (!data.phase || !data.steps) {
-      throw new Error('Invalid response from x402 proxy')
+    // Try to parse JSON regardless of status code
+    let data: X402AutomatedResponse
+    try {
+      data = await res.json()
+    } catch {
+      // Non-JSON response (e.g. Vercel 504, HTML error page)
+      return {
+        phase: 'error',
+        error: `Server returned ${res.status} ${res.statusText}. Check backend configuration.`,
+        steps: { request: null },
+      }
     }
+
+    // Normalize missing fields — don't throw, just wrap as error phase
+    if (!data || typeof data !== 'object') {
+      return {
+        phase: 'error',
+        error: 'Empty or invalid response from x402 proxy',
+        steps: { request: null },
+      }
+    }
+
+    // Ensure required fields exist
+    if (!data.phase) data.phase = 'error'
+    if (!data.steps) data.steps = { request: null }
 
     return data
   } catch (err) {
@@ -129,6 +149,7 @@ export async function executeX402Flow(): Promise<X402AutomatedResponse> {
     clearTimeout(timeout)
   }
 }
+
 
 // ══════════════════════════════════════════════════
 // MANUAL flow (fallback — direct backend calls)
@@ -253,16 +274,24 @@ export async function retryWithPayment(txHash: string): Promise<{
 // ══════════════════════════════════════════════════
 
 export async function checkBackendHealth(): Promise<HealthResponse | null> {
-  try {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 5000)
-
-    const res = await fetch(`${BACKEND_URL}/health`, { signal: controller.signal })
-    clearTimeout(timeout)
-
-    if (!res.ok) return null
-    return await res.json()
-  } catch {
-    return null
+  const check = async (url: string): Promise<HealthResponse | null> => {
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 5000)
+      const res = await fetch(url, { signal: controller.signal })
+      clearTimeout(timeout)
+      if (!res.ok) return null
+      return await res.json()
+    } catch {
+      return null
+    }
   }
+
+  // Try external backend first (local dev)
+  const external = await check(`${BACKEND_URL}/health`)
+  if (external) return external
+
+  // Fall back to internal Next.js health route (Vercel)
+  return check('/api/health')
 }
+
