@@ -72,8 +72,8 @@ export function StellarDemo() {
       if ('hash' in result) {
         // Success: add to transaction list
         const newTransaction: Transaction = {
+          ...result,
           id: `tx-${Date.now()}`,
-          ...result
         }
 
         setTransactions((prev) => [newTransaction, ...prev])
@@ -96,9 +96,9 @@ export function StellarDemo() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Stellar Integration</h1>
-        <p className="text-muted-foreground mt-2">
-          Agent wallet and transaction management
+        <h1 className="text-3xl font-bold text-foreground tracking-tight">Stellar Wallet</h1>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Agent micropayment wallet · Stellar testnet · x402 protocol
         </p>
       </div>
 
@@ -153,7 +153,6 @@ export function StellarDemo() {
                 key={tx.id}
                 transaction={tx}
                 onViewExplorer={() => {
-                  // Mock: in production would open explorer URL
                   window.open(
                     `https://stellar.expert/explorer/testnet/tx/${tx.hash}`,
                     '_blank'

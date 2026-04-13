@@ -110,7 +110,7 @@ export function TransactionCard({
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            {formatTime(transaction.timestamp)} • Stellar Testnet
+            {formatTime(transaction.timestamp)} · Stellar Testnet
           </p>
         </div>
 
@@ -142,10 +142,10 @@ export function TransactionCard({
             variant="ghost"
             size="sm"
             onClick={onViewExplorer}
-            className="text-xs h-7"
+            className="text-xs h-7 text-accent hover:text-accent/80"
           >
             <ExternalLink className="w-3 h-3 mr-1" />
-            View on Explorer
+            View on stellar.expert
           </Button>
         </div>
       )}

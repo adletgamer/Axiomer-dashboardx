@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -16,27 +17,27 @@
   --secondary-foreground: oklch(0.142 0 0);
   --muted: oklch(0.92 0 0);
   --muted-foreground: oklch(0.5 0 0);
-  --accent: oklch(0.565 0.165 189.33);
+  --accent: oklch(0.48 0.26 264);
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.595 0.241 25.33);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.92 0 0);
   --input: oklch(0.95 0 0);
-  --ring: oklch(0.565 0.165 189.33);
-  --chart-1: oklch(0.565 0.165 189.33);
+  --ring: oklch(0.48 0.26 264);
+  --chart-1: oklch(0.48 0.26 264);
   --chart-2: oklch(0.645 0.23 41.11);
-  --chart-3: oklch(0.525 0.205 143.43);
-  --chart-4: oklch(0.455 0.195 25.33);
-  --chart-5: oklch(0.72 0.21 156.78);
+  --chart-3: oklch(0.56 0.22 160);
+  --chart-4: oklch(0.72 0.19 55);
+  --chart-5: oklch(0.65 0.24 310);
   --radius: 0.5rem;
   --sidebar: oklch(0.99 0 0);
   --sidebar-foreground: oklch(0.125 0 0);
-  --sidebar-primary: oklch(0.565 0.165 189.33);
+  --sidebar-primary: oklch(0.48 0.26 264);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.95 0 0);
-  --sidebar-accent-foreground: oklch(0.565 0.165 189.33);
+  --sidebar-accent-foreground: oklch(0.48 0.26 264);
   --sidebar-border: oklch(0.92 0 0);
-  --sidebar-ring: oklch(0.565 0.165 189.33);
+  --sidebar-ring: oklch(0.48 0.26 264);
 }
 
 .dark {
@@ -52,26 +53,26 @@
   --secondary-foreground: oklch(0.95 0 0);
   --muted: oklch(0.22 0 0);
   --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.565 0.165 189.33);
-  --accent-foreground: oklch(0.11 0 0);
+  --accent: oklch(0.58 0.27 264);
+  --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.595 0.241 25.33);
   --destructive-foreground: oklch(0.95 0 0);
   --border: oklch(0.22 0 0);
   --input: oklch(0.18 0 0);
-  --ring: oklch(0.565 0.165 189.33);
-  --chart-1: oklch(0.565 0.165 189.33);
+  --ring: oklch(0.58 0.27 264);
+  --chart-1: oklch(0.58 0.27 264);
   --chart-2: oklch(0.645 0.23 41.11);
-  --chart-3: oklch(0.525 0.205 143.43);
-  --chart-4: oklch(0.455 0.195 25.33);
-  --chart-5: oklch(0.72 0.21 156.78);
-  --sidebar: oklch(0.13 0 0);
+  --chart-3: oklch(0.56 0.22 160);
+  --chart-4: oklch(0.72 0.19 55);
+  --chart-5: oklch(0.65 0.24 310);
+  --sidebar: oklch(0.10 0.01 264);
   --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.565 0.165 189.33);
-  --sidebar-primary-foreground: oklch(0.11 0 0);
-  --sidebar-accent: oklch(0.22 0 0);
-  --sidebar-accent-foreground: oklch(0.565 0.165 189.33);
-  --sidebar-border: oklch(0.22 0 0);
-  --sidebar-ring: oklch(0.565 0.165 189.33);
+  --sidebar-primary: oklch(0.58 0.27 264);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.16 0.02 264);
+  --sidebar-accent-foreground: oklch(0.85 0.05 264);
+  --sidebar-border: oklch(0.20 0.02 264);
+  --sidebar-ring: oklch(0.58 0.27 264);
 }
 
 @theme inline {
@@ -121,5 +122,36 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', 'Geist', 'Geist Fallback', sans-serif;
   }
 }
+
+/* ── Stellar brand animations ── */
+@keyframes stellar-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.15); }
+}
+@keyframes stellar-ping {
+  75%, 100% { transform: scale(2.2); opacity: 0; }
+}
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes typewriter-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.animate-stellar-pulse { animation: stellar-pulse 2s ease-in-out infinite; }
+.animate-stellar-ping  { animation: stellar-ping 1.5s cubic-bezier(0,0,0.2,1) infinite; }
+.animate-gradient-flow {
+  background-size: 200% 200%;
+  animation: gradient-flow 3s ease infinite;
+}
+.animate-ticker { animation: ticker-scroll 28s linear infinite; }
+.animate-cursor { animation: typewriter-cursor 1s step-end infinite; }

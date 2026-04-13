@@ -26,7 +26,7 @@ export interface APIResponse<T> {
  * HTTP 402 Error Response
  * Returned when payment is required
  */
-export function create402Error(endpoint: string, cost: number): APIResponse<null> {
+export function create402Error(endpoint: string, cost: number): APIResponse<any> {
   return {
     success: false,
     status: 402,

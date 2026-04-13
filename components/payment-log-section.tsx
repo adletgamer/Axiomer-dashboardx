@@ -25,7 +25,7 @@ export function PaymentLogSection() {
       date: '2024-03-28 14:32:00',
       status: 'completed',
       reason: 'Infrastructure costs',
-      txHash: '0x8f3...a2c1'
+      txHash: 'a1b2c3d4e5f6789012345678901234a1b2c3d4e5f6789012345678901234abcd'
     },
     {
       id: '2',
@@ -34,7 +34,7 @@ export function PaymentLogSection() {
       date: '2024-03-28 11:15:00',
       status: 'completed',
       reason: 'Monthly processing fees',
-      txHash: '0x3d7...f9a2'
+      txHash: 'f7e8d9c0b1a23456789012345678901f7e8d9c0b1a2345678901234567890ab12'
     },
     {
       id: '3',
@@ -43,7 +43,7 @@ export function PaymentLogSection() {
       date: '2024-03-27 09:20:00',
       status: 'completed',
       reason: 'Analytics & monitoring',
-      txHash: '0x5b2...c4e8'
+      txHash: '1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
     },
     {
       id: '4',
@@ -68,7 +68,7 @@ export function PaymentLogSection() {
       date: '2024-03-26 16:45:00',
       status: 'completed',
       reason: 'Hosting platform',
-      txHash: '0x9c1...b7d3'
+      txHash: 'deadbeef1234567890abcdeadbeef1234567890abcdeadbeef1234567890abcd'
     },
     {
       id: '7',
@@ -85,7 +85,7 @@ export function PaymentLogSection() {
       date: '2024-03-24 13:22:00',
       status: 'failed',
       reason: 'Documentation platform',
-      txHash: '0x4a6...e9f2'
+      txHash: 'cafe0000deadcafe0000deadcafe0000deadcafe0000deadcafe0000deadcafe00'
     }
   ]
 
@@ -243,10 +243,12 @@ export function PaymentLogSection() {
                   <td className="py-3 px-4">
                     {payment.txHash ? (
                       <a
-                        href="#"
-                        className="text-accent hover:underline text-xs font-mono"
+                        href={`https://stellar.expert/explorer/testnet/tx/${payment.txHash}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-accent hover:text-accent/80 transition-colors text-[10px] font-mono underline-offset-2 hover:underline break-all"
                       >
-                        {payment.txHash}
+                        {payment.txHash.slice(0, 12)}…{payment.txHash.slice(-8)}
                       </a>
                     ) : (
                       <span className="text-muted-foreground text-xs">—</span>
