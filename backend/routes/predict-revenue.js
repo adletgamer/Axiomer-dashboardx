@@ -1,16 +1,17 @@
 /**
  * /predict-revenue route
- * x402-like flow:
- *   1. GET without payment → 402 with payment instructions
- *   2. GET with tx_hash header → verify on Stellar → return data
+ * x402-like flow — enforces real Stellar payment:
+ *   1. GET without txHash → 402 with payment instructions
+ *   2. GET with txHash   → verifyTransaction() on Stellar → return data or 402
  */
 
-import { verifyStellarPayment, AGENT_DESTINATION } from '../services/stellar-verify.js';
+import { verifyTransaction, AGENT_DESTINATION } from '../services/stellar-verify.js';
 
-const PRICE = '0.02';
-const ASSET = 'USDC';
+// Price in XLM (user has 10 XLM on testnet)
+const PRICE = '0.5';
+const ASSET = 'XLM';
 
-// In-memory cache of verified tx hashes to avoid re-verification
+// In-memory cache of verified tx hashes to avoid double-verification
 const verifiedTxCache = new Map();
 
 export default function predictRevenueRoute(router) {
@@ -25,8 +26,8 @@ export default function predictRevenueRoute(router) {
         asset: ASSET,
         network: 'stellar_testnet',
         destination: AGENT_DESTINATION,
-        memo: `predict-revenue-${Date.now()}`,
-        instructions: `Send ${PRICE} ${ASSET} (or XLM equivalent on testnet) to ${AGENT_DESTINATION}, then retry with header X-Payment-Tx: <tx_hash>`,
+        memo: 'predict-revenue',
+        instructions: `Send ${PRICE} ${ASSET} to ${AGENT_DESTINATION} on Stellar testnet, then retry with header X-Payment-Tx: <tx_hash>`,
       });
     }
 
@@ -41,7 +42,12 @@ export default function predictRevenueRoute(router) {
     }
 
     // ── Verify payment on Stellar testnet ──
-    const result = await verifyStellarPayment(txHash, PRICE);
+    const result = await verifyTransaction(
+      txHash,
+      PRICE,
+      AGENT_DESTINATION,
+      undefined // memo optional for now
+    );
 
     if (!result.verified) {
       return res.status(402).json({
@@ -69,13 +75,15 @@ export default function predictRevenueRoute(router) {
 }
 
 /**
- * Generate mock financial prediction data
- * In production, this would call a real ML model or data provider
+ * Generate financial prediction data
+ * In production this would call a real ML model
  */
 function generatePrediction() {
+  const confidence = +(0.75 + Math.random() * 0.12).toFixed(2);
   return {
+    prediction: confidence > 0.82 ? 'low revenue risk' : 'moderate revenue risk',
+    confidence,
     forecastedIncome: 85000 + Math.floor(Math.random() * 10000),
-    confidence: +(0.68 + Math.random() * 0.15).toFixed(2),
     timeframe: '30 days',
     generatedAt: new Date().toISOString(),
     breakdown: {
