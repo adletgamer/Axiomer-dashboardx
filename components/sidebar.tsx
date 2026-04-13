@@ -80,7 +80,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-sm font-bold text-sidebar-foreground tracking-tight">
-              Cashflow AI
+              Axiomer AI
             </span>
             <span className="text-[10px] text-sidebar-foreground/50 truncate font-mono transition-all duration-700">
               {SCAN_MESSAGES[scanIdx]}
